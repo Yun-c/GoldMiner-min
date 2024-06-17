@@ -64,4 +64,9 @@ public class ObjectBin {
     public void setEnd_y() {
         this.end_y = y + height;
     }
+
+    //返回一个矩形 用于判断是否重叠
+    public Rectangle getObject(){
+        return new Rectangle(x,y,width,height);
+    }
 }

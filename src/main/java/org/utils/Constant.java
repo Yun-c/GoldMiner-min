@@ -33,6 +33,7 @@ public class Constant {
     public static int BLUE_SKY_HEIGHT = 120;
     //金块图片
     public static String GOLD_SMALl = "/Users/sun/WorkSpace/MyGame/src/main/resources/gold_miner_pictures/gold_small.gif";
+    public static String GOLD_BIG = "/Users/sun/WorkSpace/MyGame/src/main/resources/gold_miner_pictures/gold_big.gif";
 
     //钩子
     public static String HANGER = "/Users/sun/WorkSpace/MyGame/src/main/resources/gold_miner_pictures/hanger.png";
@@ -41,4 +42,5 @@ public class Constant {
 
     //石块
     public static String COAL_SMALL = "/Users/sun/WorkSpace/MyGame/src/main/resources/gold_miner_pictures/coal_small.png";
+    public static String COAL_BIG = "/Users/sun/WorkSpace/MyGame/src/main/resources/gold_miner_pictures/coal_small.png";
 }

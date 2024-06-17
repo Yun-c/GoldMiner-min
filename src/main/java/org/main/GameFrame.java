@@ -25,26 +25,65 @@ import java.util.List;
  **/
 public class GameFrame extends JFrame {
     //    Logger logger = LoggerFactory.getLogger("GameFrame");
-    // 先创建一个画布
+    // 1.先创建一个画布
     Image offScreenImage;
-    //载入图片
+    //2.载入图片
     public PaintPictures paintPictures = new PaintPictures();
     //黄金
 //   public PaintGold paintGold =  new PaintGold();
-    //多个黄金
-   public List<ObjectBin> objectList = new ArrayList<>();
-    {
-        for (int i = 0; i < 6; i++) {
+    //3.添加多个黄金
+    public List<ObjectBin> objectList = new ArrayList<>();
 
-            objectList.add(new PaintGold());
-            objectList.add(new PaintCola());
+    {
+        //  是否可放置 对象重叠判断
+        boolean overlap_flag = true;
+        for (int i = 0; i < 6; i++) {
+            PaintGold paintGold = new PaintGold();
+            if (overlap_flag) {
+                objectList.add(paintGold);
+            } else {
+                i--;
+            }
+            overlap_flag = OverlapCheck.overlap(objectList, paintGold);
+        }
+
+        for (int i = 0; i < 6; i++) {
+            PaintCola paintCola = new PaintCola();
+            overlap_flag = OverlapCheck.overlap(objectList, paintCola);
+            if (overlap_flag) {
+                objectList.add(paintCola);
+            } else {
+                i--;
+            }
+        }
+
+        for (int i = 0; i < 3; i++) {
+            PaintGold paintGold = new PaintGold(100, 100, Constant.GOLD_BIG, 50);
+            overlap_flag = OverlapCheck.overlap(objectList, paintGold);
+            if (overlap_flag) {
+                objectList.add(paintGold);
+            } else {
+                i--;
+            }
+        }
+
+        for (int i = 0; i < 3; i++) {
+            PaintCola paintCola = new PaintCola(100, 100, Constant.COAL_BIG, 100);
+            overlap_flag = OverlapCheck.overlap(objectList, paintCola);
+            if (overlap_flag) {
+                objectList.add(paintCola);
+            } else {
+                i--;
+            }
         }
     }
-    //画钩子
+
+    //4.画钩子
     public PaintHanger paintHanger = new PaintHanger();
-    //划线
+    //5.划线
     public PaintLine paintLine = new PaintLine(this);
 
+    //窗口设置
     public void lunch() throws InterruptedException {
         //窗口是否可见
         setVisible(true);
@@ -86,7 +125,6 @@ public class GameFrame extends JFrame {
     }
 
     //重写绘制图片方法
-
     @Override
     public void paint(Graphics graphics) {
 
