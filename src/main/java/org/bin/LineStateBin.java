@@ -13,7 +13,9 @@ public enum LineStateBin {
 
     swing(0,"swing","旋转"),
     elongate(1,"elongate","延长"),
-    shorten(2,"shorten","回收");
+    shorten(2,"shorten","回收"),
+    stillness(3,"stillness","静止"),
+    catchBack(4,"catch","回收黄金");
 
     private int value;
 

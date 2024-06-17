@@ -23,7 +23,7 @@ public class PaintPictures {
         // 画背景图
         graphics.drawImage(bg,0,120,null);
         // 画天空图
-        graphics.drawImage(blue_sky,0,0,800,120,null);
+        graphics.drawImage(blue_sky,Constant.BLUE_SKY_X,Constant.BLUE_SKY_Y,Constant.BLUE_SKY_WIDTH,Constant.BLUE_SKY_HEIGHT,null);
         // 画人物图
         graphics.drawImage(miner_middle,0,40,80,80,null);
 

@@ -11,10 +11,11 @@ import org.main.GameFrame;
  * @Version 1.0
  **/
 public class GameApp {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws Exception {
         System.out.println("Loading Game...!");
 
-        new GameFrame();
+        GameFrame gameFrame = new GameFrame();
+        gameFrame.lunch();
 
     }
 }
