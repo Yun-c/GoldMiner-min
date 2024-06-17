@@ -26,11 +26,12 @@ public class PaintGold extends ObjectBin {
         }
         this.x = set_x;
         this.y = set_y;
-        this.width = 40;
-        this.height = 40;
+        this.width = 35;
+        this.height = 35;
         this.end_x = this.x + this.width;
         this.end_y = this.y + this.height;
         this.quality = 5;
+        this.count = 5;
         this.image = Toolkit.getDefaultToolkit().getImage(Constant.GOLD_SMALl);
     }
 
@@ -50,6 +51,7 @@ public class PaintGold extends ObjectBin {
         this.end_x = this.x + this.width;
         this.end_y = this.y + this.height;
         this.quality = quality;
+        this.count = 10;
         this.image = Toolkit.getDefaultToolkit().getImage(image);
     }
 

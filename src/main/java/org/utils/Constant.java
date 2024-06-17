@@ -43,4 +43,8 @@ public class Constant {
     //石块
     public static String COAL_SMALL = "/Users/sun/WorkSpace/MyGame/src/main/resources/gold_miner_pictures/coal_small.png";
     public static String COAL_BIG = "/Users/sun/WorkSpace/MyGame/src/main/resources/gold_miner_pictures/coal_small.png";
+
+    //设置线的最小长度和最大长度
+    public static int MIN_LENGTH_LINE = 50;
+    public static int MAX_LENGTH_LINE = 650;
 }

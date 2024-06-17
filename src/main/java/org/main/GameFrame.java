@@ -2,15 +2,12 @@ package org.main;
 
 import org.bin.LineStateBin;
 import org.bin.ObjectBin;
-import org.bin.TimeFormat;
 import org.utils.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +25,7 @@ public class GameFrame extends JFrame {
     // 1.先创建一个画布
     Image offScreenImage;
     //2.载入图片
-    public PaintPictures paintPictures = new PaintPictures();
+    public PaintBackgroud paintBackgroud = new PaintBackgroud();
     //黄金
 //   public PaintGold paintGold =  new PaintGold();
     //3.添加多个黄金
@@ -58,7 +55,7 @@ public class GameFrame extends JFrame {
         }
 
         for (int i = 0; i < 3; i++) {
-            PaintGold paintGold = new PaintGold(100, 100, Constant.GOLD_BIG, 50);
+            PaintGold paintGold = new PaintGold(80, 80, Constant.GOLD_BIG, 50);
             overlap_flag = OverlapCheck.overlap(objectList, paintGold);
             if (overlap_flag) {
                 objectList.add(paintGold);
@@ -68,7 +65,7 @@ public class GameFrame extends JFrame {
         }
 
         for (int i = 0; i < 3; i++) {
-            PaintCola paintCola = new PaintCola(100, 100, Constant.COAL_BIG, 100);
+            PaintCola paintCola = new PaintCola(80, 80, Constant.COAL_BIG, 100);
             overlap_flag = OverlapCheck.overlap(objectList, paintCola);
             if (overlap_flag) {
                 objectList.add(paintCola);
@@ -77,7 +74,6 @@ public class GameFrame extends JFrame {
             }
         }
     }
-
     //4.画钩子
     public PaintHanger paintHanger = new PaintHanger();
     //5.划线
@@ -131,16 +127,19 @@ public class GameFrame extends JFrame {
         offScreenImage = this.createImage(Constant.FRAME_WIDTH, Constant.FRAME_HEIGHT);
         Graphics graphicsOffScreen = offScreenImage.getGraphics();
 
-        paintPictures.paintImage(graphicsOffScreen);
+        paintBackgroud.paintImage(graphicsOffScreen);
+
+
+        for (ObjectBin objectBin : objectList) {
+            objectBin.paintGold(graphicsOffScreen);
+        }
+
         try {
             paintLine.paintLine(graphicsOffScreen);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        for (ObjectBin objectBin : objectList) {
-            objectBin.paintGold(graphicsOffScreen);
-        }
         paintHanger.paintHanger(paintLine.getEnd_x(), paintLine.getEnd_y(), graphicsOffScreen);
 //        System.out.println("{"+paintLine.getEnd_x()+","+paintLine.getEnd_y()+","+paintLine.getLineStateBin()+"}"+ new SimpleDateFormat(TimeFormat.YYYY_MM_DD_HH_MM_SS.getFormat()).format(System.currentTimeMillis()));
         graphics.drawImage(offScreenImage, 0, 0, null);

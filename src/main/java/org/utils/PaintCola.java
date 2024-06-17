@@ -30,6 +30,7 @@ public class PaintCola extends ObjectBin {
         this.end_x = this.x + this.width;
         this.end_y = this.y + this.height;
         this.quality = 10;
+        this.count = -5;
         this.image = Toolkit.getDefaultToolkit().getImage(Constant.COAL_SMALL);
     }
 
@@ -49,6 +50,7 @@ public class PaintCola extends ObjectBin {
         this.end_x = this.x + this.width;
         this.end_y = this.y + this.height;
         this.quality = quality;
+        this.count = -10;
         this.image = Toolkit.getDefaultToolkit().getImage(image);
     }
 }

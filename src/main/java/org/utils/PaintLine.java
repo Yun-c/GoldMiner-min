@@ -18,19 +18,19 @@ import java.text.SimpleDateFormat;
  **/
 public class PaintLine {
 
-    int begin_x = 40;
+    int begin_x = Constant.FRAME_WIDTH/2;
     public int end_x = 100;
     int begin_y = 100;
     public int end_y = 400;
 //    PaintHanger paintHanger = new PaintHanger();
     //线长
-    double line_length = 100;
+    double line_length = Constant.MIN_LENGTH_LINE;
     //角度 x轴向右  y轴向下  垂直部分为PI/2 90度
-    double angle = 0;
+    double angle = 0.5;
     //方向  当angle转到了边界，开始反向
     int line_boundary = 1;
     //线的状态 延长 收回 摇摆 静止
-    LineStateBin lineStateBin = LineStateBin.stillness;
+    LineStateBin lineStateBin = LineStateBin.swing;
 
 
     GameFrame gameFrame;
@@ -76,7 +76,9 @@ public class PaintLine {
         end_y = (int)(begin_y + line_length*Math.sin(angle*Math.PI));
         // 划线
         graphics.setColor(Color.RED);
+        graphics.drawLine(begin_x,begin_y,end_x-1,end_y-1);
         graphics.drawLine(begin_x,begin_y,end_x,end_y);
+        graphics.drawLine(begin_x,begin_y,end_x+1,end_y+1);
 //        paintHanger.paintHanger(end_x,end_y,graphics);
     }
 
@@ -95,13 +97,13 @@ public class PaintLine {
                 }
                 angle = angle + 0.005*line_boundary;
                 lines(graphics);
-                if (line_length == 500){
+                if (line_length == Constant.MAX_LENGTH_LINE){
                     lineStateBin = LineStateBin.shorten;
                 }
                 break;
             case elongate:
                 //控制线的长度
-                if (line_length < 500){
+                if (line_length < Constant.MAX_LENGTH_LINE){
                     line_length = line_length + 1;
                     lines(graphics);
                     break;
@@ -110,7 +112,7 @@ public class PaintLine {
                 }
                 break;
             case shorten:
-                if (line_length > 100){
+                if (line_length > Constant.MIN_LENGTH_LINE){
                     line_length = line_length - 1;
                     lines(graphics);
                     break;
@@ -119,7 +121,7 @@ public class PaintLine {
                 }
             case catchBack:
                 int sleep_time = 1; //通过延时刷新 打到拉去速度的效果
-                if (line_length > 100){
+                if (line_length >= Constant.MIN_LENGTH_LINE){
                     line_length = line_length - 1;
                     lines(graphics);
                     //移动金块
@@ -133,12 +135,13 @@ public class PaintLine {
                             objectBin.setEnd_x();
                             objectBin.setEnd_y();
 //                            System.out.println("拉取坐标变化"+objectBin.toString());
-                            if (line_length <= 100){
+                            if (line_length <= Constant.MIN_LENGTH_LINE){
                                 //回收金块
                                 objectBin.setY(end_y - 250);
                                 //修改对象的结束x和结束y
                                 objectBin.setEnd_x();
                                 objectBin.setEnd_y();
+                                this.gameFrame.paintBackgroud.count += objectBin.count;
                                 objectBin.moveFlag = false;
                                 lineStateBin = LineStateBin.swing;
 //                                System.out.println("金块回收完成！！！！"+lineStateBin+objectBin.toString()+"p_end_x="+end_x+"p_end_y"+end_y);
