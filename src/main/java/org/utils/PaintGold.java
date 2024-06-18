@@ -1,6 +1,7 @@
 package org.utils;
 
 import org.bin.ObjectBin;
+import org.bin.ObjectName;
 
 import java.awt.*;
 
@@ -32,6 +33,7 @@ public class PaintGold extends ObjectBin {
         this.end_y = this.y + this.height;
         this.quality = 5;
         this.count = 5;
+        this.objectName = ObjectName.GOLD;
         this.image = Toolkit.getDefaultToolkit().getImage(Constant.GOLD_SMALl);
     }
 
@@ -52,6 +54,7 @@ public class PaintGold extends ObjectBin {
         this.end_y = this.y + this.height;
         this.quality = quality;
         this.count = 10;
+        this.objectName = ObjectName.GOLD;
         this.image = Toolkit.getDefaultToolkit().getImage(image);
     }
 

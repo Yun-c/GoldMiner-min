@@ -35,6 +35,9 @@ public class ObjectBin {
     //物体积分
     public int count;
 
+    //物体类型
+    public ObjectName objectName;
+
     public void paintGold(Graphics graphics){
         graphics.drawImage(this.image,this.x,this.y,this.width,this.height,null);
     }

@@ -26,6 +26,8 @@ public class GameFrame extends JFrame {
     Image offScreenImage;
     //2.载入图片
     public PaintBackgroud paintBackgroud = new PaintBackgroud();
+    // 3.添加积分
+
     //黄金
 //   public PaintGold paintGold =  new PaintGold();
     //3.添加多个黄金
@@ -55,7 +57,7 @@ public class GameFrame extends JFrame {
         }
 
         for (int i = 0; i < 3; i++) {
-            PaintGold paintGold = new PaintGold(80, 80, Constant.GOLD_BIG, 50);
+            PaintGold paintGold = new PaintGold(60, 60, Constant.GOLD_BIG, 20);
             overlap_flag = OverlapCheck.overlap(objectList, paintGold);
             if (overlap_flag) {
                 objectList.add(paintGold);
@@ -65,7 +67,7 @@ public class GameFrame extends JFrame {
         }
 
         for (int i = 0; i < 3; i++) {
-            PaintCola paintCola = new PaintCola(80, 80, Constant.COAL_BIG, 100);
+            PaintCola paintCola = new PaintCola(60, 60, Constant.COAL_BIG, 30);
             overlap_flag = OverlapCheck.overlap(objectList, paintCola);
             if (overlap_flag) {
                 objectList.add(paintCola);
@@ -99,12 +101,17 @@ public class GameFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if (e.getButton() == MouseEvent.BUTTON1) {
+                //1.鼠标左键+线的状态是旋转
+                if (e.getButton() == MouseEvent.BUTTON1 && paintLine.getLineStateBin() == LineStateBin.swing) {
                     paintLine.setLineStateBin(LineStateBin.elongate);
-                } else if (e.getButton() == MouseEvent.BUTTON2) {
-                    paintLine.setLineStateBin(LineStateBin.shorten);
-                } else {
-                    paintLine.setLineStateBin(LineStateBin.stillness);
+                    System.out.println("点击左键"+paintLine.getLineStateBin());
+                }
+                //鼠标右键+线的状态是抓取，使用炸弹
+                if (e.getButton() == MouseEvent.BUTTON3 && paintLine.getLineStateBin() == LineStateBin.catchBack){
+                       paintBackgroud.bombState = true; //炸弹可以被使用
+                       paintBackgroud.bombCount --;//炸弹减少
+                    System.out.println("点击右键键"+paintLine.getLineStateBin());
+
                 }
             }
         });
@@ -128,6 +135,8 @@ public class GameFrame extends JFrame {
         Graphics graphicsOffScreen = offScreenImage.getGraphics();
 
         paintBackgroud.paintImage(graphicsOffScreen);
+        paintBackgroud.paintCount(graphicsOffScreen,Color.BLACK,30,120,30,"积分:",paintBackgroud.count);
+        paintBackgroud.paintCount(graphicsOffScreen,Color.ORANGE,Constant.FRAME_WIDTH-100+Constant.GOLD_BOMB_WIDTH,Constant.GOLD_BOMB_HEIGHT,20,"*",paintBackgroud.bombCount);
 
 
         for (ObjectBin objectBin : objectList) {

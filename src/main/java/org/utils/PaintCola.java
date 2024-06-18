@@ -1,6 +1,7 @@
 package org.utils;
 
 import org.bin.ObjectBin;
+import org.bin.ObjectName;
 
 import java.awt.*;
 
@@ -51,6 +52,7 @@ public class PaintCola extends ObjectBin {
         this.end_y = this.y + this.height;
         this.quality = quality;
         this.count = -10;
+        this.objectName = ObjectName.COLA;
         this.image = Toolkit.getDefaultToolkit().getImage(image);
     }
 }

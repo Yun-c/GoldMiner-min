@@ -25,6 +25,8 @@ public class Constant {
     public static String BACKGROUND_IMAGE = "/Users/sun/WorkSpace/MyGame/src/main/resources/gold_miner_pictures/background.png";
     // 人物图片
     public static String MINER_MIDDLE ="/Users/sun/WorkSpace/MyGame/src/main/resources/gold_miner_pictures/miner_middle.png";
+    public static int MINER_WIDTH = 80;
+    public static int MINER_HEIGHT = 80;
     // 天空图片
     public static String BLUE_SKY = "/Users/sun/WorkSpace/MyGame/src/main/resources/gold_miner_pictures/blue_sky.jpg";
     public static int BLUE_SKY_X = 0;
@@ -47,4 +49,9 @@ public class Constant {
     //设置线的最小长度和最大长度
     public static int MIN_LENGTH_LINE = 50;
     public static int MAX_LENGTH_LINE = 650;
+
+    //定义炸弹
+    public static String GOLD_BOMB = "/Users/sun/WorkSpace/MyGame/src/main/resources/gold_miner_pictures/gold_bomb.png";
+    public static int GOLD_BOMB_WIDTH = 50 ;
+    public static int GOLD_BOMB_HEIGHT = 50 ;
 }

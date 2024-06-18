@@ -23,7 +23,7 @@ public class PaintHanger {
 
     public void paintHanger(int hanger_x, int hanger_y, Graphics graphics){
 //        System.out.println(hanger_image.getHeight(null));
-        graphics.drawImage(hanger_image, hanger_x-20, hanger_y-10,Constant.HANGER_WIDTH,Constant.HANGER_HEIGHT, null);
+        graphics.drawImage(hanger_image, hanger_x-15, hanger_y-10,Constant.HANGER_WIDTH,Constant.HANGER_HEIGHT, null);
 
     }
 
