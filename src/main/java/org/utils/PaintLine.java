@@ -144,7 +144,7 @@ public class PaintLine {
                                 //修改对象的结束x和结束y
                                 objectBin.setEnd_x();
                                 objectBin.setEnd_y();
-                                paintBackgroud.count += objectBin.count;
+                                PaintBackgroud.count += objectBin.count;
                                 objectBin.moveFlag = false;
                                 paintBackgroud.bombState = false;
                                 lineStateBin = LineStateBin.swing;
@@ -163,9 +163,9 @@ public class PaintLine {
                                 paintBackgroud.bombState = false;
                                 lineStateBin = LineStateBin.shorten;
                                 if (objectBin.objectName == ObjectName.COLA) {
-                                    paintBackgroud.count += 10;
+                                    PaintBackgroud.count += 10;
                                 } else {
-                                    paintBackgroud.count += -10;
+                                    PaintBackgroud.count += -10;
                                 }
                             }
 

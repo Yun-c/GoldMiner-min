@@ -1,5 +1,6 @@
 package org.main;
 
+import org.bin.GameState;
 import org.bin.LineStateBin;
 import org.bin.ObjectBin;
 import org.utils.*;
@@ -27,7 +28,6 @@ public class GameFrame extends JFrame {
     //2.载入图片
     public PaintBackgroud paintBackgroud = new PaintBackgroud();
     // 3.添加积分
-
     //黄金
 //   public PaintGold paintGold =  new PaintGold();
     //3.添加多个黄金
@@ -36,7 +36,8 @@ public class GameFrame extends JFrame {
     {
         //  是否可放置 对象重叠判断
         boolean overlap_flag = true;
-        for (int i = 0; i < 6; i++) {
+        ColaAndGoldTotal colaAndGoldTotal = new ColaAndGoldTotal(PaintBackgroud.level);
+        for (int i = 0; i < colaAndGoldTotal.gold_small; i++) {
             PaintGold paintGold = new PaintGold();
             if (overlap_flag) {
                 objectList.add(paintGold);
@@ -46,7 +47,7 @@ public class GameFrame extends JFrame {
             overlap_flag = OverlapCheck.overlap(objectList, paintGold);
         }
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < colaAndGoldTotal.cola_small; i++) {
             PaintCola paintCola = new PaintCola();
             overlap_flag = OverlapCheck.overlap(objectList, paintCola);
             if (overlap_flag) {
@@ -56,7 +57,7 @@ public class GameFrame extends JFrame {
             }
         }
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < colaAndGoldTotal.gold_big; i++) {
             PaintGold paintGold = new PaintGold(60, 60, Constant.GOLD_BIG, 20);
             overlap_flag = OverlapCheck.overlap(objectList, paintGold);
             if (overlap_flag) {
@@ -66,7 +67,7 @@ public class GameFrame extends JFrame {
             }
         }
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < colaAndGoldTotal.cola_big; i++) {
             PaintCola paintCola = new PaintCola(60, 60, Constant.COAL_BIG, 30);
             overlap_flag = OverlapCheck.overlap(objectList, paintCola);
             if (overlap_flag) {
@@ -80,7 +81,8 @@ public class GameFrame extends JFrame {
     public PaintHanger paintHanger = new PaintHanger();
     //5.划线
     public PaintLine paintLine = new PaintLine(this);
-
+    //6.游戏状态
+    public static GameState gameState = GameState.PREPARING;
     //窗口设置
     public void lunch() throws InterruptedException {
         //窗口是否可见
@@ -101,18 +103,29 @@ public class GameFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                //1.鼠标左键+线的状态是旋转
-                if (e.getButton() == MouseEvent.BUTTON1 && paintLine.getLineStateBin() == LineStateBin.swing) {
-                    paintLine.setLineStateBin(LineStateBin.elongate);
-                    System.out.println("点击左键"+paintLine.getLineStateBin());
+//                System.out.println("鼠标事件:"+e.getClickCount());
+                switch (gameState) {
+                    case PREPARING:
+                        if (e.getClickCount() == MouseEvent.BUTTON3) {
+                            gameState = GameState.IN_PROCESS;
+                            paintBackgroud.startTime = System.currentTimeMillis();
+                            System.out.println("开始时间:"+paintBackgroud.startTime);
+                        }
+                    case IN_PROCESS:
+                        //1.鼠标左键+线的状态是旋转
+                        if (e.getButton() == MouseEvent.BUTTON1 && paintLine.getLineStateBin() == LineStateBin.swing) {
+                            paintLine.setLineStateBin(LineStateBin.elongate);
+//                            System.out.println("点击左键"+paintLine.getLineStateBin());
+                        }
+                        //鼠标右键+线的状态是抓取，使用炸弹
+                        if (e.getButton() == MouseEvent.BUTTON3 && paintLine.getLineStateBin() == LineStateBin.catchBack){
+                            paintBackgroud.bombState = true; //炸弹可以被使用
+                            paintBackgroud.bombCount --;//炸弹减少
+//                            System.out.println("点击右键键"+paintLine.getLineStateBin());
+                        }
+                        break;
                 }
-                //鼠标右键+线的状态是抓取，使用炸弹
-                if (e.getButton() == MouseEvent.BUTTON3 && paintLine.getLineStateBin() == LineStateBin.catchBack){
-                       paintBackgroud.bombState = true; //炸弹可以被使用
-                       paintBackgroud.bombCount --;//炸弹减少
-                    System.out.println("点击右键键"+paintLine.getLineStateBin());
 
-                }
             }
         });
 
@@ -122,6 +135,10 @@ public class GameFrame extends JFrame {
         //重复绘制
         while (true) {
             repaint();
+            switch (gameState) {
+                case IN_PROCESS:
+                    nextLevel();
+            }
             Thread.sleep(10);
         }
 
@@ -135,23 +152,43 @@ public class GameFrame extends JFrame {
         Graphics graphicsOffScreen = offScreenImage.getGraphics();
 
         paintBackgroud.paintImage(graphicsOffScreen);
-        paintBackgroud.paintCount(graphicsOffScreen,Color.BLACK,30,120,30,"积分:",paintBackgroud.count);
-        paintBackgroud.paintCount(graphicsOffScreen,Color.ORANGE,Constant.FRAME_WIDTH-100+Constant.GOLD_BOMB_WIDTH,Constant.GOLD_BOMB_HEIGHT,20,"*",paintBackgroud.bombCount);
 
-
-        for (ObjectBin objectBin : objectList) {
-            objectBin.paintGold(graphicsOffScreen);
-        }
-
-        try {
-            paintLine.paintLine(graphicsOffScreen);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        paintHanger.paintHanger(paintLine.getEnd_x(), paintLine.getEnd_y(), graphicsOffScreen);
+        switch (gameState) {
+            case IN_PROCESS:
+                for (ObjectBin objectBin : objectList) {
+                    objectBin.paintGold(graphicsOffScreen);
+                }
+                try {
+                    paintLine.paintLine(graphicsOffScreen);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                paintHanger.paintHanger(paintLine.getEnd_x(), paintLine.getEnd_y(), graphicsOffScreen);
 //        System.out.println("{"+paintLine.getEnd_x()+","+paintLine.getEnd_y()+","+paintLine.getLineStateBin()+"}"+ new SimpleDateFormat(TimeFormat.YYYY_MM_DD_HH_MM_SS.getFormat()).format(System.currentTimeMillis()));
+
+        }
+
         graphics.drawImage(offScreenImage, 0, 0, null);
+
+    }
+
+    //下一关的控制
+    public void nextLevel() throws InterruptedException {
+        //      时间结束才进入下一关
+//                    System.out.println(paintBackgroud.remainder());
+//                    System.out.println(gameState);
+
+//        if (paintBackgroud.remainder() && gameState == GameState.IN_PROCESS){
+//            System.out.println("下一关");
+            if (PaintBackgroud.count > paintBackgroud.target_points ){
+                PaintBackgroud.level++;
+                dispose(); //清除
+                GameFrame gameFrame = new GameFrame();
+                gameFrame.lunch();
+            }
+//        }else {
+//            gameState = GameState.FAIL;
+//        }
 
 
     }

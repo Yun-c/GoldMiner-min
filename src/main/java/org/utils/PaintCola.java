@@ -32,6 +32,7 @@ public class PaintCola extends ObjectBin {
         this.end_y = this.y + this.height;
         this.quality = 10;
         this.count = -5;
+        this.objectName = ObjectName.COLA;
         this.image = Toolkit.getDefaultToolkit().getImage(Constant.COAL_SMALL);
     }
 
