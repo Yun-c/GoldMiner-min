@@ -29,8 +29,9 @@ public class PaintBackgroud {
     public boolean bombState = false;
 
     //定义开始时间和结束时间
-    public  long startTime;
-    public  long endTime;
+    public long startTime;
+    public long endTime;
+
 
     public void paintImage(Graphics graphics) {
         // 画背景图
@@ -44,23 +45,27 @@ public class PaintBackgroud {
         switch (GameFrame.gameState) {
             case IN_PROCESS:
                 graphics.drawImage(gold_bomb, Constant.FRAME_WIDTH - 100, Constant.GOLD_BOMB_WIDTH / 2, Constant.GOLD_BOMB_WIDTH, Constant.GOLD_BOMB_HEIGHT, null);
-                paintCount(graphics, Color.BLACK, 30, 60, 20, "积分:"+count);
-                paintCount(graphics, Color.BLACK, 30, 90, 20, "关卡:"+level);
-                paintCount(graphics, Color.BLACK, 30, 120, 20, "目标积分:"+ target_points);
-                paintCount(graphics, Color.ORANGE, Constant.FRAME_WIDTH - 100 + Constant.GOLD_BOMB_WIDTH, Constant.GOLD_BOMB_HEIGHT, 20, "*"+bombCount);
+                paintCount(graphics, Color.BLACK, 30, 60, 20, "积分:" + count);
+                paintCount(graphics, Color.BLACK, 30, 90, 20, "关卡:" + level);
+                paintCount(graphics, Color.BLACK, 30, 120, 20, "目标积分:" + target_points);
+                paintCount(graphics, Color.ORANGE, Constant.FRAME_WIDTH - 100 + Constant.GOLD_BOMB_WIDTH, Constant.GOLD_BOMB_HEIGHT, 20, "*" + bombCount);
                 endTime = System.currentTimeMillis();
-                System.out.println(endTime);
-                long time = 20 - (endTime - startTime)/1000;
-                paintCount(graphics,Color.green,30,150,20,"剩余时间:"+(time>0?time:0));
+//                System.out.println(endTime);
+                long time = Constant.LEVEL_TIME + level - (endTime - startTime) / 1000;
+                paintCount(graphics, Color.green, Constant.FRAME_WIDTH - 130, Constant.GOLD_BOMB_WIDTH / 2 + 60, 20, "剩余时间:" + (time > 0 ? time : 0));
                 break;
             case PREPARING:
 //                System.out.println("写字"+Constant.FRAME_WIDTH/2+"//"+Constant.FRAME_HEIGHT/2);
-                paintCount(graphics, Color.ORANGE, Constant.FRAME_WIDTH/2-100, Constant.FRAME_HEIGHT/2 , 30, "来一把吗");
+                paintCount(graphics, Color.ORANGE, Constant.FRAME_WIDTH / 2 - 100, Constant.FRAME_HEIGHT / 2, 30, "来一把吗");
                 break;
             case FAIL:
-                paintCount(graphics, Color.ORANGE, Constant.FRAME_WIDTH/2-100, Constant.FRAME_HEIGHT/2 , 50, "游戏结束");
-                paintCount(graphics, Color.ORANGE, Constant.FRAME_WIDTH/2-100, Constant.FRAME_HEIGHT/2 -100, 50, "得分"+count);
-
+                paintCount(graphics, Color.ORANGE, Constant.FRAME_WIDTH / 2 - 100, Constant.FRAME_HEIGHT / 2, 50, "游戏结束");
+                paintCount(graphics, Color.ORANGE, Constant.FRAME_WIDTH / 2 - 100, Constant.FRAME_HEIGHT / 2 - 100, 50, "得分" + count);
+                break;
+            case WIN:
+                paintCount(graphics, Color.ORANGE, Constant.FRAME_WIDTH / 2 - 100, Constant.FRAME_HEIGHT / 2, 50, "游戏成功");
+                paintCount(graphics, Color.ORANGE, Constant.FRAME_WIDTH / 2 - 100, Constant.FRAME_HEIGHT / 2 - 100, 50, "得分" + count);
+                break;
         }
 
 
@@ -73,9 +78,23 @@ public class PaintBackgroud {
         graphics.drawString(name, x, y);
     }
 
-    public  boolean remainder(){
-        long time = (endTime - startTime)/1000;
-        return time > 20;
+    public boolean remainder() {
+        long time = (endTime - startTime) / 1000;
+//        System.out.println("时间差："+time+"///"+startTime+"///"+endTime);
+        return time < Constant.LEVEL_TIME + level;
+    }
+
+    //重置元素
+    public void reBulid() {
+        int count = 0;
+        int level = 1;
+        //定义炸弹数量及炸弹状态
+        int bombCount = 5;
+        boolean bombState = false;
+        startTime = System.currentTimeMillis();
+
+        //todo  失败回到上一个位置  成功关卡数据没有重置
+
     }
 
 }

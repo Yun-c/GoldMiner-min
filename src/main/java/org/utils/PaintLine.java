@@ -31,7 +31,7 @@ public class PaintLine {
     //方向  当angle转到了边界，开始反向
     int line_boundary = 1;
     //线的状态 延长 收回 摇摆 静止
-    LineStateBin lineStateBin = LineStateBin.swing;
+    public static LineStateBin lineStateBin = LineStateBin.swing;
 
 
     GameFrame gameFrame;
@@ -195,6 +195,12 @@ public class PaintLine {
                 lines(graphics);
                 break;
         }
+
+    }
+
+    public  void reBulid(){
+
+        lineStateBin = LineStateBin.swing;
 
     }
 }

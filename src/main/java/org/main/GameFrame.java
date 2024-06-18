@@ -77,12 +77,14 @@ public class GameFrame extends JFrame {
             }
         }
     }
+
     //4.画钩子
     public PaintHanger paintHanger = new PaintHanger();
     //5.划线
     public PaintLine paintLine = new PaintLine(this);
     //6.游戏状态
     public static GameState gameState = GameState.PREPARING;
+
     //窗口设置
     public void lunch() throws InterruptedException {
         //窗口是否可见
@@ -97,7 +99,7 @@ public class GameFrame extends JFrame {
         //窗口大小不可改变
         setResizable(false);
 
-
+//        System.out.println("state"+gameState);
         //添加鼠标事件控制参数
         addMouseListener(new MouseAdapter() {
             @Override
@@ -106,11 +108,12 @@ public class GameFrame extends JFrame {
 //                System.out.println("鼠标事件:"+e.getClickCount());
                 switch (gameState) {
                     case PREPARING:
-                        if (e.getClickCount() == MouseEvent.BUTTON3) {
+                        if (e.getClickCount() == MouseEvent.BUTTON2) {
                             gameState = GameState.IN_PROCESS;
                             paintBackgroud.startTime = System.currentTimeMillis();
-                            System.out.println("开始时间:"+paintBackgroud.startTime);
+//                            System.out.println("开始时间:"+paintBackgroud.startTime);
                         }
+                        break;
                     case IN_PROCESS:
                         //1.鼠标左键+线的状态是旋转
                         if (e.getButton() == MouseEvent.BUTTON1 && paintLine.getLineStateBin() == LineStateBin.swing) {
@@ -118,10 +121,20 @@ public class GameFrame extends JFrame {
 //                            System.out.println("点击左键"+paintLine.getLineStateBin());
                         }
                         //鼠标右键+线的状态是抓取，使用炸弹
-                        if (e.getButton() == MouseEvent.BUTTON3 && paintLine.getLineStateBin() == LineStateBin.catchBack){
+                        if (e.getButton() == MouseEvent.BUTTON3 && paintLine.getLineStateBin() == LineStateBin.catchBack) {
                             paintBackgroud.bombState = true; //炸弹可以被使用
-                            paintBackgroud.bombCount --;//炸弹减少
+                            paintBackgroud.bombCount--;//炸弹减少
 //                            System.out.println("点击右键键"+paintLine.getLineStateBin());
+                        }
+                        break;
+                    case WIN:
+                    case FAIL:
+                        if (e.getClickCount() == MouseEvent.BUTTON3) {
+                            System.out.println("调整");
+                            gameState = GameState.IN_PROCESS;
+//                            System.out.println(gameState);
+                            paintBackgroud.reBulid();
+                            paintLine.reBulid();
                         }
                         break;
                 }
@@ -138,6 +151,7 @@ public class GameFrame extends JFrame {
             switch (gameState) {
                 case IN_PROCESS:
                     nextLevel();
+                    break;
             }
             Thread.sleep(10);
         }
@@ -153,6 +167,8 @@ public class GameFrame extends JFrame {
 
         paintBackgroud.paintImage(graphicsOffScreen);
 
+//        System.out.println("game"+gameState);
+
         switch (gameState) {
             case IN_PROCESS:
                 for (ObjectBin objectBin : objectList) {
@@ -165,7 +181,7 @@ public class GameFrame extends JFrame {
                 }
                 paintHanger.paintHanger(paintLine.getEnd_x(), paintLine.getEnd_y(), graphicsOffScreen);
 //        System.out.println("{"+paintLine.getEnd_x()+","+paintLine.getEnd_y()+","+paintLine.getLineStateBin()+"}"+ new SimpleDateFormat(TimeFormat.YYYY_MM_DD_HH_MM_SS.getFormat()).format(System.currentTimeMillis()));
-
+                break;
         }
 
         graphics.drawImage(offScreenImage, 0, 0, null);
@@ -175,20 +191,28 @@ public class GameFrame extends JFrame {
     //下一关的控制
     public void nextLevel() throws InterruptedException {
         //      时间结束才进入下一关
-//                    System.out.println(paintBackgroud.remainder());
-//                    System.out.println(gameState);
-
-//        if (paintBackgroud.remainder() && gameState == GameState.IN_PROCESS){
-//            System.out.println("下一关");
-            if (PaintBackgroud.count > paintBackgroud.target_points ){
-                PaintBackgroud.level++;
-                dispose(); //清除
-                GameFrame gameFrame = new GameFrame();
-                gameFrame.lunch();
+        System.out.println(paintBackgroud.remainder() + "0-0" + gameState);
+        if (paintBackgroud.remainder() && gameState == GameState.IN_PROCESS) {
+            System.out.println(paintBackgroud.remainder() + "0-01" + gameState);
+            System.out.println("bak"+paintBackgroud.remainder());
+            System.out.println("count"+PaintBackgroud.count + paintBackgroud.target_points);
+            if (PaintBackgroud.count > paintBackgroud.target_points) {
+                if (PaintBackgroud.level == Constant.MAX_LEVEL) {
+                    gameState = GameState.WIN;
+                } else {
+                    PaintBackgroud.level++;
+                    dispose(); //清除
+                    GameFrame gameFrame = new GameFrame();
+                    paintBackgroud.startTime = System.currentTimeMillis();
+                    // 重置startTime的开始值，否则无初始值了
+                    gameFrame.lunch();
+                }
             }
-//        }else {
-//            gameState = GameState.FAIL;
-//        }
+        } else {
+            gameState = GameState.FAIL;
+        }
+
+
 
 
     }

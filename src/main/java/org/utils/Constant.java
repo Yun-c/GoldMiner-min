@@ -54,4 +54,9 @@ public class Constant {
     public static String GOLD_BOMB = "/Users/sun/WorkSpace/MyGame/src/main/resources/gold_miner_pictures/gold_bomb.png";
     public static int GOLD_BOMB_WIDTH = 50 ;
     public static int GOLD_BOMB_HEIGHT = 50 ;
+
+    //关卡数
+    public static int MAX_LEVEL = 5;
+    //关卡时间
+    public static int LEVEL_TIME = 20;
 }
