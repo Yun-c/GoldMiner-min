@@ -7,6 +7,8 @@ import org.utils.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -85,6 +87,7 @@ public class GameFrame extends JFrame {
     //6.游戏状态
     public static GameState gameState = GameState.PREPARING;
 
+
     //窗口设置
     public void lunch() throws InterruptedException {
         //窗口是否可见
@@ -113,7 +116,7 @@ public class GameFrame extends JFrame {
                             paintBackgroud.startTime = System.currentTimeMillis();
 //                            System.out.println("开始时间:"+paintBackgroud.startTime);
                         }
-                        break;
+
                     case IN_PROCESS:
                         //1.鼠标左键+线的状态是旋转
                         if (e.getButton() == MouseEvent.BUTTON1 && paintLine.getLineStateBin() == LineStateBin.swing) {
@@ -121,7 +124,7 @@ public class GameFrame extends JFrame {
 //                            System.out.println("点击左键"+paintLine.getLineStateBin());
                         }
                         //鼠标右键+线的状态是抓取，使用炸弹
-                        if (e.getButton() == MouseEvent.BUTTON3 && paintLine.getLineStateBin() == LineStateBin.catchBack) {
+                        if (e.getButton() == MouseEvent.BUTTON3 && paintLine.getLineStateBin() == LineStateBin.catchBack && paintBackgroud.bombCount > 0) {
                             paintBackgroud.bombState = true; //炸弹可以被使用
                             paintBackgroud.bombCount--;//炸弹减少
 //                            System.out.println("点击右键键"+paintLine.getLineStateBin());
@@ -135,9 +138,54 @@ public class GameFrame extends JFrame {
 //                            System.out.println(gameState);
                             paintBackgroud.reBulid();
                             paintLine.reBulid();
+//                            System.out.println("paintBack"+paintBackgroud.toString());
+//                            System.out.println("paintLine"+paintLine.toString());
+                        }
+                        break;
+                    case STORE:
+                        if (e.getClickCount() == MouseEvent.BUTTON1) {
+                            paintBackgroud.shop = true;
+                        }
+                        if (e.getButton() == MouseEvent.BUTTON3) {
+                            gameState = GameState.IN_PROCESS;
+                            paintBackgroud.startTime = System.currentTimeMillis();
                         }
                         break;
                 }
+
+            }
+        });
+
+        // 添加键盘监听
+
+        addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch (gameState) {
+
+                    case STORE:
+                        if (e.getKeyCode() == KeyEvent.VK_O) {
+                            paintBackgroud.shop = true;
+                        }
+                        if (e.getKeyCode() == KeyEvent.VK_P) {
+                            gameState = GameState.IN_PROCESS;
+                            paintBackgroud.startTime = System.currentTimeMillis();
+                        }
+
+
+
+                }
+
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
 
             }
         });
@@ -147,12 +195,12 @@ public class GameFrame extends JFrame {
 
         //重复绘制
         while (true) {
-            repaint();
-            switch (gameState) {
-                case IN_PROCESS:
-                    nextLevel();
-                    break;
-            }
+                repaint();
+                switch (gameState) {
+                    case IN_PROCESS:
+                        nextLevel();
+                        break;
+                }
             Thread.sleep(10);
         }
 
@@ -182,6 +230,7 @@ public class GameFrame extends JFrame {
                 paintHanger.paintHanger(paintLine.getEnd_x(), paintLine.getEnd_y(), graphicsOffScreen);
 //        System.out.println("{"+paintLine.getEnd_x()+","+paintLine.getEnd_y()+","+paintLine.getLineStateBin()+"}"+ new SimpleDateFormat(TimeFormat.YYYY_MM_DD_HH_MM_SS.getFormat()).format(System.currentTimeMillis()));
                 break;
+
         }
 
         graphics.drawImage(offScreenImage, 0, 0, null);
@@ -191,20 +240,23 @@ public class GameFrame extends JFrame {
     //下一关的控制
     public void nextLevel() throws InterruptedException {
         //      时间结束才进入下一关
-        System.out.println(paintBackgroud.remainder() + "0-0" + gameState);
+//        System.out.println(paintBackgroud.remainder() + "0-0" + gameState);
         if (paintBackgroud.remainder() && gameState == GameState.IN_PROCESS) {
-            System.out.println(paintBackgroud.remainder() + "0-01" + gameState);
-            System.out.println("bak"+paintBackgroud.remainder());
-            System.out.println("count"+PaintBackgroud.count + paintBackgroud.target_points);
+//            System.out.println(paintBackgroud.remainder() + "0-01" + gameState);
+//            System.out.println("bak"+paintBackgroud.remainder());
+//            System.out.println("count"+PaintBackgroud.count + paintBackgroud.target_points);
             if (PaintBackgroud.count > paintBackgroud.target_points) {
                 if (PaintBackgroud.level == Constant.MAX_LEVEL) {
                     gameState = GameState.WIN;
                 } else {
+                    gameState =GameState.STORE;
                     PaintBackgroud.level++;
+//                    System.out.println("下一关"+PaintBackgroud.level);
                     dispose(); //清除
+//                    System.out.println("gamestate1"+gameState);
                     GameFrame gameFrame = new GameFrame();
-                    paintBackgroud.startTime = System.currentTimeMillis();
-                    // 重置startTime的开始值，否则无初始值了
+                    // 重置startTime的开始值，否则无初始值了为0，因为创建了新的对象
+                    gameFrame.paintBackgroud.startTime = System.currentTimeMillis();
                     gameFrame.lunch();
                 }
             }

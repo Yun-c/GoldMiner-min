@@ -13,7 +13,8 @@ public enum GameState {
     WIN("win","游戏成功"),
     FAIL("fail","失败"),
     PREPARING("preparing","准备中"),
-    IN_PROCESS("in_process","进行中");
+    IN_PROCESS("in_process","进行中"),
+    STORE("store","商店");
 
     public final String state;
     public final String name;

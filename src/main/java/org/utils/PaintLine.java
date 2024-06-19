@@ -198,9 +198,32 @@ public class PaintLine {
 
     }
 
-    public  void reBulid(){
-
+    public void reBulid() {
+        begin_x = Constant.FRAME_WIDTH / 2;
+        end_x = 100;
+        begin_y = 100;
+        end_y = 400;
+        //    PaintHanger paintHanger = new PaintHanger();
+        //线长
+        line_length = Constant.MIN_LENGTH_LINE;
+        //角度 x轴向右  y轴向下  垂直部分为PI/2 90度
+        angle = 0.5;
+        //方向  当angle转到了边界，开始反向
+        line_boundary = 1;
         lineStateBin = LineStateBin.swing;
+    }
 
+    @Override
+    public String toString() {
+        return "PaintLine{" +
+                "begin_x=" + begin_x +
+                ", end_x=" + end_x +
+                ", begin_y=" + begin_y +
+                ", end_y=" + end_y +
+                ", line_length=" + line_length +
+                ", angle=" + angle +
+                ", line_boundary=" + line_boundary +
+                ", gameFrame=" + gameFrame +
+                '}';
     }
 }

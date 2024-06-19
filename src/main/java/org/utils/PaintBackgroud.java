@@ -1,5 +1,6 @@
 package org.utils;
 
+import org.bin.GameState;
 import org.main.GameFrame;
 
 import java.awt.*;
@@ -32,6 +33,11 @@ public class PaintBackgroud {
     public long startTime;
     public long endTime;
 
+    //定义药水价格
+    int price = 5;
+    //是否进入商店
+    public boolean shop  = false;
+
 
     public void paintImage(Graphics graphics) {
         // 画背景图
@@ -52,7 +58,7 @@ public class PaintBackgroud {
                 endTime = System.currentTimeMillis();
 //                System.out.println(endTime);
                 long time = Constant.LEVEL_TIME + level - (endTime - startTime) / 1000;
-                paintCount(graphics, Color.green, Constant.FRAME_WIDTH - 130, Constant.GOLD_BOMB_WIDTH / 2 + 60, 20, "剩余时间:" + (time > 0 ? time : 0));
+                paintCount(graphics, Color.green, Constant.FRAME_WIDTH - 130, Constant.GOLD_BOMB_WIDTH / 2 + 65, 20, "剩余时间:" + (time > 0 ? time : 0));
                 break;
             case PREPARING:
 //                System.out.println("写字"+Constant.FRAME_WIDTH/2+"//"+Constant.FRAME_HEIGHT/2);
@@ -65,6 +71,19 @@ public class PaintBackgroud {
             case WIN:
                 paintCount(graphics, Color.ORANGE, Constant.FRAME_WIDTH / 2 - 100, Constant.FRAME_HEIGHT / 2, 50, "游戏成功");
                 paintCount(graphics, Color.ORANGE, Constant.FRAME_WIDTH / 2 - 100, Constant.FRAME_HEIGHT / 2 - 100, 50, "得分" + count);
+                break;
+            case STORE:
+                graphics.drawImage(gold_bomb, Constant.FRAME_WIDTH/2, Constant.FRAME_HEIGHT / 2, Constant.GOLD_BOMB_WIDTH, Constant.GOLD_BOMB_HEIGHT, null);
+                paintCount(graphics, Color.ORANGE, Constant.FRAME_WIDTH/2, Constant.FRAME_HEIGHT/2+60, 20, "价格：" +price);
+                paintCount(graphics, Color.ORANGE, Constant.FRAME_WIDTH/2, Constant.FRAME_HEIGHT/2+80, 20, "是否购买：" );
+                if (shop){
+
+                    count = count - price;
+                    bombCount++;
+                    shop = false;
+                    GameFrame.gameState = GameState.IN_PROCESS;
+                    startTime = System.currentTimeMillis();
+                }
                 break;
         }
 
@@ -86,15 +105,19 @@ public class PaintBackgroud {
 
     //重置元素
     public void reBulid() {
-        int count = 0;
-        int level = 1;
+        count = 0;
+        level = 1;
         //定义炸弹数量及炸弹状态
-        int bombCount = 5;
-        boolean bombState = false;
+        bombCount = 5;
+        bombState = false;
+        target_points = level * 15;
         startTime = System.currentTimeMillis();
-
         //todo  失败回到上一个位置  成功关卡数据没有重置
 
     }
 
+    @Override
+    public String toString() {
+        return "{"+count+","+level+","+target_points+"};";
+    }
 }
